@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quiz Bee Game</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #6dd5ed, #2193b0);
+    color: white;
+    text-align: center;
+}
+
+h1 { margin: 20px 0; }
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.team {
+    width: 45%;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+.vector { font-size: 40px; }
+
+.score { font-size: 24px; margin-bottom: 10px; }
+
+.letters {
+    font-size: 30px;
+    letter-spacing: 8px;
+    margin: 20px 0;
+}
+
+input {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    width: 70%;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #ffcc00;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover { background: #ffaa00; }
+
+.controls { margin: 20px; }
+</style>
+</head>
+
+<body>
+
+<h1>🎓 Quiz Bee Spelling Challenge</h1>
+
+<div class="container">
+
+<!-- TEAM A -->
+<div class="team">
+    <div class="vector">🐝📘</div>
+    <h2>Team A</h2>
+    <div class="score">Score: <span id="scoreA">0</span></div>
+    <div id="lettersA" class="letters">---</div>
+    <input id="inputA" placeholder="Arrange the word">
+    <br>
+    <button onclick="check('A')">Submit</button>
+</div>
+
+<!-- TEAM B -->
+<div class="team">
+    <div class="vector">🐝📗</div>
+    <h2>Team B</h2>
+    <div class="score">Score: <span id="scoreB">0</span></div>
+    <div id="lettersB" class="letters">---</div>
+    <input id="inputB" placeholder="Arrange the word">
+    <br>
+    <button onclick="check('B')">Submit</button>
+</div>
+
+</div>
+
+<div class="controls">
+    <button onclick="start()">Start</button>
+    <button onclick="next()">Next</button>
+</div>
+
+<audio id="correct" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
+<audio id="wrong" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<script>
+const words = [
+    {w:"cat",p:5},{w:"dog",p:5},{w:"book",p:5},
+    {w:"teacher",p:5},{w:"school",p:5},
+    {w:"hyperbole",p:10},{w:"metaphor",p:10},
+    {w:"onomatopoeia",p:10},{w:"alliteration",p:10}
+];
+
+let A,B,scoreA=0,scoreB=0;
+
+function shuffle(w){
+    return w.split('').sort(()=>Math.random()-0.5).join(' ');
+}
+
+function random(){
+    return words[Math.floor(Math.random()*words.length)];
+}
+
+function start(){ next(); }
+
+function next(){
+    A = random();
+    B = random();
+    document.getElementById("lettersA").innerText = shuffle(A.w);
+    document.getElementById("lettersB").innerText = shuffle(B.w);
+}
+
+function check(team){
+    let input, word, pts;
+
+    if(team==='A'){
+        input=document.getElementById("inputA").value.toLowerCase();
+        word=A.w; pts=A.p;
+    } else {
+        input=document.getElementById("inputB").value.toLowerCase();
+        word=B.w; pts=B.p;
+    }
+
+    if(input===word){
+        document.getElementById("correct").play();
+        if(team==='A'){
+            scoreA+=pts;
+            document.getElementById("scoreA").innerText=scoreA;
+        } else {
+            scoreB+=pts;
+            document.getElementById("scoreB").innerText=scoreB;
+        }
+        alert("Correct!");
+    } else {
+        document.getElementById("wrong").play();
+        alert("Wrong answer!");
+    }
+}
+</script>
+
+</body>
+</html>
